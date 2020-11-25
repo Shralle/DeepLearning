@@ -13,27 +13,22 @@ import torch.nn as nn
 import numpy as np
 import torch.from_numpy as from_numpy
 import torch.optim as optim
-traindata = []
-inputs = np.ndarray(shape=(3,256,256), dtype=float)
-labels = np.ndarray(shape=(10,256,256), dtype=float)
-labels_list = []
-inputs_list = []
-labels = []
+inputs = np.ndarray(shape=(18,3,256,256), dtype=float)
+labels = np.ndarray(shape=(18,10,256,256), dtype=float)
 data_dir = 'carseg_data/save'
+i=0
 for filename in os.listdir(data_dir):
     datafiles = os.listdir(data_dir)
     if filename.endswith('.npy'):
         traindata = np.load(data_dir+'/' + filename)
-        inputs = traindata[0:3]
-        inputs_list.append(inputs)
-        labels = traindata[3:13]
-        labels_list.append(labels)
-print(inputs_list[17][2])
+        inputs[i] = traindata[0:3]
+        labels[i] = traindata[3:13]
+    i = i + 1        
+inputs = torch.from_numpy(inputs)
+labels = torch.from_numpy(labels)
 in_channels = 256
 mid_channels = 256
 out_channels = 256
-test = torch.from_numpy(inputs_list[0])
-print(test)
 class UNet(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
         super(UNet, self).__init__()
@@ -48,11 +43,7 @@ class UNet(nn.Module):
     def forward(self, x):
         return self.double_conv(x)
 net = UNet(n_channels = 256,n_classes = 9)
-inputs_list_tensor = []
-for i in range(len(inputs_list)-1):
-    inputs_list_tensor.append( torch.from_numpy(inputs_list[i]))
-print(inputs_list_tensor[0])
-trainloader = torch.utils.data.DataLoader(inputs_list_tensor, batch_size=1, shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(inputs, batch_size=1, shuffle=True, num_workers=2)
 batch = next(iter(trainloader))
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
