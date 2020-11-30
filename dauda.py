@@ -204,18 +204,10 @@ model_ft.fc = nn.Linear(512, num_classes)
 
 print("Initializing Datasets and Dataloaders...")
 
-dir_img = '../carseg_data/save/'
-val_percent=0.1
-
-dataset = BasicDataset(dir_img)
-n_val = int(len(dataset) * val_percent)
-n_train = len(dataset) - n_val
-train, val = random_split(dataset, [n_train, n_val])
-train_loader = DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=16, pin_memory=True, drop_last=False)
-val_loader = DataLoader(val, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True, drop_last=False)
-
-
-
+# Create training and validation datasets
+image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'val']}
+# Create training and validation dataloaders
+dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=4) for x in ['train', 'val']}
 ##-----------------------------------------------------------------------------------------------------------------------
 
 

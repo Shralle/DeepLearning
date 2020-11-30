@@ -10,6 +10,8 @@ import torch.optim as optim
 #data_dir = 'carseg_data/save'
 data_dir_train = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
+#mus dir:
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 train_dataset_size = os.listdir(data_dir_train)
 test_dataset_size = os.listdir(data_dir_test)
