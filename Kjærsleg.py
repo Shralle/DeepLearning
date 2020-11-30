@@ -6,29 +6,42 @@ import torch.nn as nn
 import numpy as np
 #import torch.from_numpy as from_numpy
 import torch.optim as optim
+#Set directory for data
+#data_dir = 'carseg_data/save'
+data_dir_train = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
 #Initialize ARRAYS
-train = np.ndarray(shape=(18,13,256,256), dtype = float)
+train_dataset_size = os.listdir(data_dir_train)
+test_dataset_size = os.listdir(data_dir_test)
+train = np.ndarray(shape=(train_dataset_size,13,256,256), dtype = float)
+test = np.ndarray(shape=(test_dataset_size,13,256,256), dtype = float)
 inputs = np.ndarray(shape=(18,3,256,256), dtype=float)
 labels = np.ndarray(shape=(18,9,256,256), dtype=float)
 mask = np.ndarray(shape=(18,1,256,256), dtype=float)
-#Set directory for data
-#data_dir = 'carseg_data/save'
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #Initialize counter
 i=0
 #Loop for loading data
-for filename in os.listdir(data_dir):
-    datafiles = os.listdir(data_dir)
+for filename in os.listdir(data_dir_train):
+    datafiles = os.listdir(data_dir_train)
     if filename.endswith('.npy'):
-        traindata = np.load(data_dir+'/' + filename)
+        traindata = np.load(data_dir_train+'/' + filename)
         train[i] = traindata
 #        inputs[i] = traindata[0:3]
 #        labels[i] = traindata[4:13]
 #        mask[i] = traindata[3:4]
     i = i + 1       
 #Convert data from nNumpy arrays into tensors 
-
+for filename in os.listdir(data_dir_test):
+    datafiles = os.listdir(data_dir_test)
+    if filename.endswith('.npy'):
+        testdata = np.load(data_dir_test+'/' + filename)
+        test[i] = testdata
+#        inputs[i] = traindata[0:3]
+#        labels[i] = traindata[4:13]
+#        mask[i] = traindata[3:4]
+    i = i + 1   
 train = torch.from_numpy(train).float()
+test = torch.from_numpy(test).flow
 #inputs = torch.from_numpy(inputs).float()
 #labels = torch.from_numpy(labels).float()
 #Initialize convolution layer size
@@ -54,6 +67,7 @@ net = UNet(n_channels = 3,n_classes = 9)
 #Ved ikke helt hvad det her gør, har bare brugt det før i tidligere ogpgaver :/
 trainloader = torch.utils.data.DataLoader(train, batch_size = 6, shuffle=True)
 train_data_iter = next(iter(trainloader))
+testloader = torch.utils.data.DataLoader(test, batch_size = 6, shuffle=True)
 #labelsloader = torch.utils.data.DataLoader(labels, shuffle=True)
 
 #Optimizer / loss function
@@ -88,3 +102,16 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
+correct = 0
+total = 0
+
+for data in testloader:
+    inputs = data[:,0:3,:,:]
+    labels = data[:,4:13,:,:]
+    outputs = net(Variable(images))
+    _, predicted = torch.max(outputs.data, 1)
+    total += labels.size(0)
+    correct += (predicted == labels).sum()
+
+print('Accuracy of the network on the {} test images: {:4.2f} %'.format(
+    test_dataset_size, 100 * correct.true_divide(total)))
