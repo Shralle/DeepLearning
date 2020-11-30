@@ -38,7 +38,7 @@ in_channels = 3
 mid_channels = 256
 out_channels = 9
 #Initialize Network
-class UNet(nn.Module):
+class Convolution(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
         super(UNet, self).__init__()
         self.double_conv = nn.Sequential(
@@ -52,7 +52,7 @@ class UNet(nn.Module):
     def forward(self, x):
         return self.double_conv(x)
 #Create Network
-net = UNet(n_channels = 3,n_classes = 9)
+net = Convolution(n_channels = 3,n_classes = 9)
 
 #Optimizer / loss function
 criterion = nn.CrossEntropyLoss()
