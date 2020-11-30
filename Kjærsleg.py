@@ -19,7 +19,12 @@ inputs = np.ndarray(shape=(18,3,256,256), dtype=float)
 labels = np.ndarray(shape=(18,10,256,256), dtype=float)
 #Set directory for data
 #data_dir = 'carseg_data/save'
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+
+#Mus
+data_dir = 'Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save'
+
+
 #Initialize counter
 i=0
 #Loop for loading data
