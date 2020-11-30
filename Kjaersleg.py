@@ -1,10 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov  9 13:17:29 2020
 
-@author: frederikkjaer
-"""
 import os
 #import glob
 import torch
@@ -22,7 +16,7 @@ labels = np.ndarray(shape=(18,10,256,256), dtype=float)
 #data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 
 #Mus
-data_dir = 'Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save'
+data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 
 
 #Initialize counter
