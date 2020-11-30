@@ -33,7 +33,7 @@ for filename in os.listdir(data_dir_test):
     datafiles = os.listdir(data_dir_test)
     if filename.endswith('.npy'):
         testdata = np.load(data_dir_test+'/' + filename)
-        test[i] = testdata
+        test[j] = testdata
 
     j = j + 1   
 train = torch.from_numpy(train).float()
@@ -62,7 +62,7 @@ net = UNet(n_channels = 3,n_classes = 9)
 #Seperates the data into batches of size 6.
 trainloader = torch.utils.data.DataLoader(train, batch_size = 6, shuffle=True)
 train_data_iter = next(iter(trainloader))
-#testloader = torch.utils.data.DataLoader(test, batch_size = 6, shuffle=True)
+testloader = torch.utils.data.DataLoader(test, batch_size = 6, shuffle=True)
 
 #Optimizer / loss function
 criterion = nn.CrossEntropyLoss()
@@ -99,13 +99,13 @@ print('Finished Training')
 correct = 0
 total = 0
 
-#for data in testloader:
-#    images = data[:,0:3,:,:]
-#    labels = data[:,4:13,:,:]
-#    outputs = net(Variable(images))
-#    _, predicted = torch.max(outputs.data, 1)
-#    total += labels.size(0)
-#    correct += (predicted == labels).sum()
+for data in testloader:
+    images = data[:,0:3,:,:]
+    labels = data[:,4:13,:,:]
+    labels = torch.argmax(labels, dim = 1)
+    outputs = net(Variable(images))
+    _, predicted = torch.max(outputs.data, 1)
+    total += labels.size(0)
+    correct += (predicted == labels).sum()
 
-#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(
-#    test_dataset_size, 100 * correct.true_divide(total)))
+print('Accuracy of the network on the {} test images: {:4.2f} %'.format(test_dataset_size, (100 * correct.true_divide(total*256*256))))
