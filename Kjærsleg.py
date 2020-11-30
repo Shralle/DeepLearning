@@ -11,13 +11,14 @@ import torch
 import torch.nn as nn
 #import torch.nn.functional as F
 import numpy as np
-import torch.from_numpy as from_numpy
+#import torch.from_numpy as from_numpy
 import torch.optim as optim
 #Initialize ARRAYS
 inputs = np.ndarray(shape=(18,3,256,256), dtype=float)
 labels = np.ndarray(shape=(18,10,256,256), dtype=float)
 #Set directory for data
-data_dir = 'carseg_data/save'
+#data_dir = 'carseg_data/save'
+data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #Initialize counter
 i=0
 #Loop for loading data
@@ -29,12 +30,12 @@ for filename in os.listdir(data_dir):
         labels[i] = traindata[3:13]
     i = i + 1       
 #Convert data from nNumpy arrays into tensors 
-inputs = torch.from_numpy(inputs)
-labels = torch.from_numpy(labels)
+inputs = torch.from_numpy(inputs).float()
+labels = torch.from_numpy(labels).float()
 #Initialize convolution layer size
-in_channels = 256
+in_channels = 3
 mid_channels = 256
-out_channels = 256
+out_channels = 9
 #Initialize Network
 class UNet(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
@@ -52,8 +53,9 @@ class UNet(nn.Module):
 #Create Network
 net = UNet(n_channels = 256,n_classes = 9)
 #Ved ikke helt hvad det her gør, har bare brugt det før i tidligere ogpgaver :/
-trainloader = torch.utils.data.DataLoader(inputs, batch_size=1, shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(inputs, batch_size=1, shuffle=True, num_workers=0)
 batch = next(iter(trainloader))
+labelloader = torch.utils.data.DataLoader(labels, batch_size=1, shuffle=True, num_workers=0)
 #Optimizer / loss function
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
@@ -68,7 +70,7 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         optimizer.zero_grad()
-        targets = labels
+        targets = labelloader
         outputs = net(inputs)
         loss = criterion(outputs, targets)
         loss.forward()
