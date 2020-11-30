@@ -13,8 +13,8 @@ data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLea
 #mus dir:
 #data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
-train_dataset_size = os.listdir(data_dir_train)
-test_dataset_size = os.listdir(data_dir_test)
+train_dataset_size = len(os.listdir(data_dir_train))
+test_dataset_size = len(os.listdir(data_dir_test))
 train = np.ndarray(shape=(train_dataset_size,13,256,256), dtype = float)
 test = np.ndarray(shape=(test_dataset_size,13,256,256), dtype = float)
 inputs = np.ndarray(shape=(18,3,256,256), dtype=float)
