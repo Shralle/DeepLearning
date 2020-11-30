@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov  9 13:17:29 2020
-
-@author: frederikkjaer
-"""
 import os
 #import glob
 import torch
@@ -16,7 +9,8 @@ import torch.optim as optim
 #Initialize ARRAYS
 train = np.ndarray(shape=(18,13,256,256), dtype = float)
 inputs = np.ndarray(shape=(18,3,256,256), dtype=float)
-labels = np.ndarray(shape=(18,10,256,256), dtype=float)
+labels = np.ndarray(shape=(18,9,256,256), dtype=float)
+mask = np.ndarray(shape=(18,1,256,256), dtype=float)
 #Set directory for data
 #data_dir = 'carseg_data/save'
 data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
@@ -29,7 +23,8 @@ for filename in os.listdir(data_dir):
         traindata = np.load(data_dir+'/' + filename)
         train[i] = traindata
 #        inputs[i] = traindata[0:3]
-#        labels[i] = traindata[3:13]
+#        labels[i] = traindata[4:13]
+#        mask[i] = traindata[3:4]
     i = i + 1       
 #Convert data from nNumpy arrays into tensors 
 
@@ -45,11 +40,11 @@ class UNet(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
         super(UNet, self).__init__()
         self.double_conv = nn.Sequential(
-                    nn.Conv2d(in_channels, mid_channels, kernel_size=3, padding=1),
+                    nn.Conv2d(n_channels, mid_channels, kernel_size=3, padding=1),
                     nn.BatchNorm2d(mid_channels),
                     nn.ReLU(inplace=True),
-                    nn.Conv2d(mid_channels, out_channels, kernel_size=3, padding=1),
-                    nn.BatchNorm2d(out_channels),
+                    nn.Conv2d(mid_channels, n_classes, kernel_size=3, padding=1),
+                    nn.BatchNorm2d(n_classes),
                     nn.ReLU(inplace=True)
                 )
     def forward(self, x):
@@ -76,14 +71,14 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        labels = data[:,3:13,:,:]
+        labels = data[:,4:13,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
         targets = labels
-        targets = np.squeeze(targets, axis = 1)
+        targets = torch.argmax(targets, dim = 1)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
-        loss.forward()
+        loss.backward()
         optimizer.step()
         # print statistics
         running_loss += loss.item()
@@ -92,3 +87,4 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             (epoch + 1, i + 1, running_loss / 10))
             running_loss = 0.0
 print('Finished Training')
+
