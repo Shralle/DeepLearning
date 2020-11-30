@@ -58,7 +58,8 @@ class UNet(nn.Module):
         return self.double_conv(x)
 #Create Network
 net = UNet(n_channels = 3,n_classes = 9)
-#Ved ikke helt hvad det her gør, har bare brugt det før i tidligere ogpgaver :/
+
+#Seperates the data into batches of size 6.
 trainloader = torch.utils.data.DataLoader(train, batch_size = 6, shuffle=True)
 train_data_iter = next(iter(trainloader))
 #testloader = torch.utils.data.DataLoader(test, batch_size = 6, shuffle=True)
