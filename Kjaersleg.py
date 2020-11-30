@@ -2,12 +2,9 @@ import os
 #import glob
 import torch
 import torch.nn as nn
-#import torch.nn.functional as F
 import numpy as np
-#import torch.from_numpy as from_numpy
 import torch.optim as optim
 #Set directory for data
-#data_dir = 'carseg_data/save'
 data_dir_train = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
 #mus dir:
