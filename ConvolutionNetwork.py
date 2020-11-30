@@ -40,7 +40,7 @@ out_channels = 9
 #Initialize Network
 class Convolution(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
-        super(UNet, self).__init__()
+        super(Convolution, self).__init__()
         self.double_conv = nn.Sequential(
                     nn.Conv2d(n_channels, mid_channels, kernel_size=3, padding=1),
                     nn.BatchNorm2d(mid_channels),

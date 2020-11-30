@@ -1,3 +1,10 @@
+import torch
+import torch.nn as nn
+import numpy as np
+import torch.optim as optim
+in_channels = 3
+mid_channels = 256
+out_channels = 9
 class UNet(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
         super(UNet, self).__init__()
