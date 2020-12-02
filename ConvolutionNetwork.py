@@ -70,7 +70,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        mask = data[:,3,:,:]
         labels = data[:,4:13,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
@@ -100,5 +99,9 @@ for data in test_loader:
     outputs = net(Variable(images))
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
-    correct += (predicted == labels).sum()
+    #correct += (predicted == labels).sum()
+    calc = (labels == 0).sum()
+    print(calc)
+    correct += torch.sum(predicted == labels)
+#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
