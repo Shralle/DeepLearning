@@ -6,10 +6,10 @@ import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 #Set directory for data
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
 #mus dir:
-#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
