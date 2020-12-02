@@ -59,7 +59,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 3
+num_epoch = 1
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -69,6 +69,7 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
+        mask = data[:,3,:,:]
         labels = data[:,4:13,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
@@ -85,6 +86,7 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             (epoch + 1, i + 1, running_loss / 10))
             running_loss = 0.0
 print('Finished Training')
+
 
 correct = 0
 total = 0
