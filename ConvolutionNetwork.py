@@ -5,6 +5,7 @@ import torch.nn as nn
 import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
+from SoftDiceloss import SoftDiceloss
 #Set directory for data
 #data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
@@ -54,7 +55,7 @@ class Convolution(nn.Module):
 net = Convolution(n_channels = 3,n_classes = 9)
 
 #Optimizer / loss function
-criterion = nn.CrossEntropyLoss()
+#criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
@@ -73,9 +74,10 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
         targets = labels
-        targets = torch.argmax(targets, dim = 1)
+        #targets = torch.argmax(targets, dim = 1)
         outputs = net(inputs)
-        loss = criterion(outputs, targets)
+        #loss = criterion(outputs, targets)
+        loss = SoftDiceloss(outputs, targets, mask, batch_size)
         loss.backward()
         optimizer.step()
         # print statistics
