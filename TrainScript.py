@@ -1,7 +1,6 @@
-from UNet import *
 import os
-
-#from ConvolutionNetwork import *
+from UNetSimple import *
+from ConvolutionNetwork import *
 from torch.utils.data import DataLoader, random_split
 
 #Set directory for data
