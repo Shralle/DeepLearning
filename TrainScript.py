@@ -1,17 +1,13 @@
-import os
-#import glob
-import torch
-import torch.nn as nn
-import numpy as np
-import torch.optim as optim
+#from UNet import *
+from ConvolutionNetwork import *
 from torch.utils.data import DataLoader, random_split
+
 #Set directory for data
-#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
 #mus dir:
-data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
-#Initialize ARRAYS
-
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
 #Initialize counter
@@ -34,31 +30,13 @@ batch_size = 6
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=True)
 
-in_channels = 3
-mid_channels = 256
-#Initialize Network
-class Convolution(nn.Module):
-    def __init__(self, n_channels, n_classes, bilinear=True):
-        super(Convolution, self).__init__()
-        self.double_conv = nn.Sequential(
-                    nn.Conv2d(n_channels, mid_channels, kernel_size=3, padding=1),
-                    nn.BatchNorm2d(mid_channels),
-                    nn.ReLU(inplace=True),
-                    nn.Conv2d(mid_channels, n_classes, kernel_size=3, padding=1),
-                    nn.BatchNorm2d(n_classes),
-                    nn.ReLU(inplace=True)
-                )
-    def forward(self, x):
-        return self.double_conv(x)
-#Create Network
 net = Convolution(n_channels = 3,n_classes = 9)
-
 #Optimizer / loss function
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 1
+num_epoch = 3
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -68,7 +46,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        mask = data[:,3,:,:]
         labels = data[:,4:13,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
@@ -85,7 +62,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             (epoch + 1, i + 1, running_loss / 10))
             running_loss = 0.0
 print('Finished Training')
-
 
 correct = 0
 total = 0
