@@ -4,8 +4,6 @@ import numpy as np
 import torch.optim as optim
 from torch.nn import Linear, Conv2d, BatchNorm2d, MaxPool2d, Dropout2d
 from torch.nn.functional import relu, elu, relu6, sigmoid, tanh, softmax
-in_channels = 3
-out_channels = 9
 class UNet(nn.Module):
     def __init__(self, n_channels, n_classes, bilinear=True):
         super(UNet, self).__init__()
@@ -75,5 +73,3 @@ class UNet(nn.Module):
         layer9up1 = relu(self.conv9(skip1))
         layer9up1 = relu(self.conv9(layer9up1))
         return self.conv10(layer9up1)
-#Create Network
-net = UNet(n_channels = 3,n_classes = 9)
