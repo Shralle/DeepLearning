@@ -116,8 +116,8 @@ colors = {0: [0, 0, 0],
           6: [250, 150, 10],
           7: [150, 10, 150],
           8: [10, 250, 10]}
-print(colors[1])
-picture = predicted[1]
+predicted = predicted[1]
+print(picture.shape)
 for i in range(0,8):
     if(i == 0):
         picture[i,:,:] = picture[colors[0],:,:]
