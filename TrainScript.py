@@ -1,6 +1,12 @@
 import os
-from UNetSimple import *
-from ConvolutionNetwork import *
+import torch
+import numpy as np
+import torch.nn as nn
+from UNetSimple import UNet
+import torch.optim as optim
+from SoftDiceloss import SoftDiceloss
+from dice_loss import dice_loss
+#from ConvolutionNetwork import *
 from torch.utils.data import DataLoader, random_split
 
 #Set directory for data
@@ -25,7 +31,7 @@ data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
 train, test = random_split(data, [n_train, n_test])
-batch_size = 6
+batch_size = 30
 
 #Splits the data intop batches
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=True)
@@ -33,7 +39,7 @@ test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle
 
 net = UNet(n_channels = 3,n_classes = 9)
 #Optimizer / loss function
-criterion = nn.CrossEntropyLoss()
+#criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
@@ -47,13 +53,15 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
+        mask = data[:,3,:,:]
         labels = data[:,4:13,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
         targets = labels
         targets = torch.argmax(targets, dim = 1)
         outputs = net(inputs)
-        loss = criterion(outputs, targets)
+        #loss = criterion(outputs, targets)
+        loss = dice_loss(targets, outputs, ignore_background=True)
         loss.backward()
         optimizer.step()
         # print statistics
@@ -64,16 +72,16 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
+
 correct = 0
 total = 0
 
-#for data in test_loader:
-    #images = data[:,0:3,:,:]
-    #labels = data[:,4:13,:,:]
-    #labels = torch.argmax(labels, dim = 1)
-    #outputs = net(Variable(images))
-    #_, predicted = torch.max(outputs.data, 1)
-    #total += labels.size(0)
-    #correct += (predicted == labels).sum()
-
-#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+for data in test_loader:
+    images = data[:,0:3,:,:]
+    labels = data[:,4:13,:,:]
+    labels = torch.argmax(labels, dim = 1)
+    outputs = net(Variable(images))
+    _, predicted = torch.max(outputs.data, 1)
+    total += labels.size(0)
+    correct += (predicted == labels).sum()
+print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))

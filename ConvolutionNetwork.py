@@ -8,10 +8,9 @@ from torch.utils.data import DataLoader, random_split
 from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
 #Set directory for data
-#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
-#data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
+data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
-data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
