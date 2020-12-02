@@ -1,5 +1,7 @@
-#from UNet import *
-from ConvolutionNetwork import *
+from UNet import *
+import os
+
+#from ConvolutionNetwork import *
 from torch.utils.data import DataLoader, random_split
 
 #Set directory for data
@@ -30,7 +32,7 @@ batch_size = 6
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=True)
 
-net = Convolution(n_channels = 3,n_classes = 9)
+net = UNet(n_channels = 3,n_classes = 9)
 #Optimizer / loss function
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
@@ -66,13 +68,13 @@ print('Finished Training')
 correct = 0
 total = 0
 
-for data in test_loader:
-    images = data[:,0:3,:,:]
-    labels = data[:,4:13,:,:]
-    labels = torch.argmax(labels, dim = 1)
-    outputs = net(Variable(images))
-    _, predicted = torch.max(outputs.data, 1)
-    total += labels.size(0)
-    correct += (predicted == labels).sum()
+#for data in test_loader:
+    #images = data[:,0:3,:,:]
+    #labels = data[:,4:13,:,:]
+    #labels = torch.argmax(labels, dim = 1)
+    #outputs = net(Variable(images))
+    #_, predicted = torch.max(outputs.data, 1)
+    #total += labels.size(0)
+    #correct += (predicted == labels).sum()
 
-print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
