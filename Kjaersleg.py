@@ -75,14 +75,13 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        labels = data[:,3:13,:,:]
+        labels = data[:,4:13,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
-        targets = labels
-        targets = np.squeeze(targets, axis = 1)
+        targets = torch.argmax(labels, dim=1)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
-        loss.forward()
+        loss.backward()
         optimizer.step()
         # print statistics
         running_loss += loss.item()
