@@ -106,3 +106,37 @@ for data in test_loader:
     correct += torch.sum(predicted == labels)
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+
+colors = {0: [0, 0, 0],
+          1: [10, 100, 10],
+          2: [250, 250, 10],
+          3: [10, 10, 250],
+          4: [10, 250, 250],
+          5: [250, 10, 250],
+          6: [250, 150, 10],
+          7: [150, 10, 150],
+          8: [10, 250, 10]}
+print(colors[1])
+picture = predicted[1]
+for i in range(0,8):
+    if(i == 0):
+        picture[i,:,:] = picture[colors[0],:,:]
+    if(i == 1):
+        picture[i,:,:] = picture[colors[1],:,:]
+    if(i == 2):
+        picture[i,:,:] = picture[colors[2],:,:]
+    if(i == 3):
+        picture[i,:,:] = picture[colors[3],:,:]
+    if(i == 4):
+        picture[i,:,:] = picture[colors[4],:,:]
+    if(i == 5):
+        picture[i,:,:] = picture[colors[5],:,:]
+    if(i == 6):
+        picture[i,:,:] = picture[colors[6],:,:]
+    if(i == 7):
+        picture[i,:,:] = picture[colors[7],:,:]
+    if(i == 8):
+        picture[i,:,:] = picture[colors[8],:,:]
+    if(i == 9):
+        picture[i,:,:] = picture[colors[9],:,:]
+plt.imshow(picture)
