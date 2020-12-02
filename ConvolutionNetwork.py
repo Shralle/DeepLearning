@@ -7,10 +7,12 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
+import matplotlib.pyplot as plt
+
 #Set directory for data
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
-#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
@@ -32,8 +34,8 @@ train, test = random_split(data, [n_train, n_test])
 batch_size = 6
 
 #Splits the data intop batches
-train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=True)
-test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=True)
+train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=False)
+test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 in_channels = 3
 mid_channels = 256
@@ -69,7 +71,8 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        labels = data[:,4:13,:,:]
+        labels = data[:,3:12,:,:]
+        mask = data[:,12,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
         targets = labels
@@ -92,15 +95,14 @@ correct = 0
 total = 0
 
 for data in test_loader:
-    images = data[:,0:3,:,:]
-    labels = data[:,4:13,:,:]
+    inputs = data[:,0:3,:,:]
+    labels = data[:,3:12,:,:]
+    mask = data[:,12,:,:]
     labels = torch.argmax(labels, dim = 1)
-    outputs = net(Variable(images))
+    outputs = net(Variable(inputs))
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
     #correct += (predicted == labels).sum()
-    calc = (labels == 0).sum()
-    print(calc)
     correct += torch.sum(predicted == labels)
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
