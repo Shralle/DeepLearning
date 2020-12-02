@@ -1,6 +1,10 @@
 import os
-from UNetSimple import *
-from ConvolutionNetwork import *
+import torch
+import numpy as np
+import torch.nn as nn
+from UNetSimple import UNet
+import torch.optim as optim
+#from ConvolutionNetwork import *
 from torch.utils.data import DataLoader, random_split
 
 #Set directory for data
