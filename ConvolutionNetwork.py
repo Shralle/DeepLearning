@@ -6,6 +6,7 @@ import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
 from SoftDiceloss import SoftDiceloss
+from dice_loss import dice_loss
 #Set directory for data
 data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
@@ -73,10 +74,10 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
         targets = labels
-        #targets = torch.argmax(targets, dim = 1)
+        targets = torch.argmax(targets, dim = 1)
         outputs = net(inputs)
         #loss = criterion(outputs, targets)
-        loss = SoftDiceloss(outputs, targets, mask, batch_size)
+        loss = dice_loss(targets, outputs, ignore_background=True)
         loss.backward()
         optimizer.step()
         # print statistics
@@ -99,5 +100,4 @@ for data in test_loader:
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
     correct += (predicted == labels).sum()
-
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
