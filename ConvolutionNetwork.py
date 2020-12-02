@@ -10,9 +10,9 @@ from dice_loss import dice_loss
 import matplotlib.pyplot as plt
 
 #Set directory for data
-#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
-data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
@@ -118,25 +118,27 @@ colors = {0: [0, 0, 0],
           8: [10, 250, 10]}
 print(colors[1])
 picture = predicted[1]
-for i in range(0,8):
-    if(i == 0):
-        picture[i,:,:] = picture[colors[0],:,:]
-    if(i == 1):
-        picture[i,:,:] = picture[colors[1],:,:]
-    if(i == 2):
-        picture[i,:,:] = picture[colors[2],:,:]
-    if(i == 3):
-        picture[i,:,:] = picture[colors[3],:,:]
-    if(i == 4):
-        picture[i,:,:] = picture[colors[4],:,:]
-    if(i == 5):
-        picture[i,:,:] = picture[colors[5],:,:]
-    if(i == 6):
-        picture[i,:,:] = picture[colors[6],:,:]
-    if(i == 7):
-        picture[i,:,:] = picture[colors[7],:,:]
-    if(i == 8):
-        picture[i,:,:] = picture[colors[8],:,:]
-    if(i == 9):
-        picture[i,:,:] = picture[colors[9],:,:]
+pictureprint = np.zeros((3,256,256))
+for i in range(256):
+    for j in range(256):
+        if(picture[i,j] == 0):
+            pictureprint[:,i,j] = colors[0]
+        if(picture[i,j] == 1):
+            pictureprint[:,i,j] = colors[1]
+        if(picture[i,j] == 2):
+            pictureprint[:,i,j] = colors[2]
+        if(picture[i,j] == 3):
+            pictureprint[:,i,j] = colors[3]
+        if(picture[i,j] == 4):
+            pictureprint[:,i,j] = colors[4]
+        if(picture[i,j] == 5):
+            pictureprint[:,i,j] = colors[5]
+        if(picture[i,j] == 6):
+            pictureprint[:,i,j] = colors[6]
+        if(picture[i,j] == 7):
+            pictureprint[:,i,j] = colors[7]
+        if(picture[i,j] == 8):
+            pictureprint[:,i,j] = colors[8]
+        if(picture[i,j] == 9):
+            pictureprint[:,i,j] = colors[9]
 plt.imshow(picture)
