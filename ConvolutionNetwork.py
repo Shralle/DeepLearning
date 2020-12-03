@@ -141,4 +141,3 @@ for i in range(256):
             pictureprint[:,i,j] = colors[8]
         if(picture[i,j] == 9):
             pictureprint[:,i,j] = colors[9]
-plt.imshow(picture)
