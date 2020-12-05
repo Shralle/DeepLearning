@@ -157,7 +157,6 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[9])
 img = Image.fromarray(pictureprint, 'RGB')
 img.show()
-plt.imshow(pictureprint)
 test = picture[15,15]
 print("Shape of pictureprint: ", pictureprint.shape)
 print("billedes label i farvekode: ", test.item())
