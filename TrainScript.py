@@ -8,13 +8,16 @@ from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
 #from ConvolutionNetwork import Convolution
 from torch.utils.data import DataLoader, random_split
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 #Set directory for data
 #data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
 #mus dir:
-data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#HPC
+data_dir = "./carseg_data/save"
+
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -32,7 +35,7 @@ data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
 train, test = random_split(data, [n_train, n_test])
-batch_size = 30
+batch_size = 6
 
 #Splits the data intop batches
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=True)
@@ -71,6 +74,8 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         labels = torch.argmax(labels, dim = 1)
         outputs = net(inputs)
         #loss = criterion(outputs, labels)
+        print(labels.shape)
+        print(outputs.shape)
         loss = dice_loss(labels, outputs, ignore_background=True)
         loss.backward()
         optimizer.step()
