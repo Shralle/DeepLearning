@@ -34,19 +34,19 @@ class UNet(nn.Module):
         layer1 = relu(self.conv11(layer1))
 
         layer2down1 = self.down(layer1)
-        layer2 = relu(self.conv2(layer2down1))
+        layer22 = relu(self.conv2(layer2down1))
         layer22 = relu(self.conv22(layer2))
 
         layer3down2 = self.down(layer22)
-        layer3 = relu(self.conv3(layer3down2))
+        layer33 = relu(self.conv3(layer3down2))
         layer33 = relu(self.conv33(layer3))
 
         layer4down3 = self.down(layer33)
-        layer4 = relu(self.conv4(layer4down3))
+        layer44 = relu(self.conv4(layer4down3))
         layer44 = relu(self.conv44(layer4))
 
         layer5down4 = self.down(layer44)
-        layer5 = relu(self.conv5(layer5down4))
+        layer55 = relu(self.conv5(layer5down4))
         layer55 = relu(self.conv55(layer5))
         
         layer6up4 = self.up(layer55)
