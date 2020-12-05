@@ -3,6 +3,33 @@ from PIL import Image
 import torch
 from torch.utils.data import DataLoader, random_split
 
+#Set directory for data
+data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+#mus dir:
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#HPC
+data_dir = "./carseg_data/save"
+
+#Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
+dataset_size = len(os.listdir(data_dir))
+DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
+#Initialize counter
+i=0
+#Loop for loading data
+for filename in os.listdir(data_dir):
+    if filename.endswith('.npy'):
+        DataTemp = np.load(data_dir+'/' + filename)
+        DataAll[i] = DataTemp
+
+    i = i + 1       
+
+data = torch.from_numpy(DataAll).float()
+n_test = int(len(data) * 0.1)
+n_train = len(data) - n_test
+train, test = random_split(data, [n_train, n_test])
+batch_size = 6
+test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
+
 
 PATH = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/'
 model = torch.load(PATH)
