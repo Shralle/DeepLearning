@@ -68,7 +68,7 @@ print(net)
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 2
+num_epoch = 1
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -98,6 +98,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
-PATH = '/model/'
+PATH = './model/model.pt'
 
-torch.save(net.state_dict(), PATH)
+torch.save(net, PATH)

@@ -1,6 +1,11 @@
 import torch.nn as nn
 from PIL import Image
+from ConvolutionNetwork import Convolution
+from UNetSimple import UNet
+from torch.autograd import Variable
+import numpy as np
 import torch
+import os
 from torch.utils.data import DataLoader, random_split
 
 #Set directory for data
@@ -31,9 +36,10 @@ batch_size = 6
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
-PATH = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/'
-model = torch.load(PATH)
-model.eval()
+PATH = './model/model.pt'
+net = Convolution(n_channels = 3,n_classes = 9)
+net = torch.load(PATH)
+#model.eval()
 
 correct = 0
 total = 0

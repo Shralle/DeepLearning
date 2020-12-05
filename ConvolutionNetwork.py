@@ -13,7 +13,7 @@ from PIL import Image
 #Set directory for data
 #data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
-data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+data_dir = "./carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
@@ -69,7 +69,7 @@ print(net)
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 10
+num_epoch = 1
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
