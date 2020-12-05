@@ -8,11 +8,12 @@ from torch.utils.data import DataLoader, random_split
 from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
 import matplotlib.pyplot as plt
+from PIL import Image
 
 #Set directory for data
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
-#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
@@ -68,7 +69,7 @@ print(net)
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 1
+num_epoch = 10
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -129,20 +130,8 @@ colors = {0: [int(0), int(0), int(0)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
 print(colors[1])
-picture = predicted[1]
+picture = predicted[2]
 pictureprint = np.zeros((256,256,3))
-
-#pictureprint[picture==0] = colors[0]
-#pictureprint[picture==1] = colors[1]
-#pictureprint[picture==2] = colors[2]
-#pictureprint[picture==3] = colors[3]
-#pictureprint[picture==4] = colors[4]
-#pictureprint[picture==5] = colors[5]
-#pictureprint[picture==6] = colors[6]
-#pictureprint[picture==7] = colors[7]
-#pictureprint[picture==8] = colors[8]
-#pictureprint[picture==9] = colors[9]
-#print(pictureprint[0,0])
 
 for i in range(256):
     for j in range(256):
@@ -166,7 +155,10 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[8])
         if(picture[i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
+img = Image.fromarray(pictureprint, 'RGB')
+img.show()
 plt.imshow(pictureprint)
 test = picture[15,15]
+print("Shape of pictureprint: ", pictureprint.shape)
 print("billedes label i farvekode: ", test.item())
 print("bileldes label i farvekode efter loop: ", pictureprint[15,15,:]) 
