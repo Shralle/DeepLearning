@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader, random_split
 from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
 import matplotlib.pyplot as plt
+from PIL import Image
 
 #Set directory for data
 data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
@@ -130,7 +131,7 @@ colors = {0: [int(0), int(0), int(0)],
           8: [int(10), int(250), int(10)]}
 print(colors[1])
 picture = predicted[1]
-pictureprint = np.zeros((256,256,3))
+pictureprint = np.zeros((256,256,3), dtype=int)
 
 #pictureprint[picture==0] = colors[0]
 #pictureprint[picture==1] = colors[1]
@@ -166,7 +167,10 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[8])
         if(picture[i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
+img = Image.fromarray(pictureprint, 'RGB')
+img.show()
 plt.imshow(pictureprint)
 test = picture[15,15]
+print("Shape of pictureprint: ", pictureprint.shape)
 print("billedes label i farvekode: ", test.item())
 print("bileldes label i farvekode efter loop: ", pictureprint[15,15,:]) 
