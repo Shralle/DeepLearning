@@ -116,7 +116,7 @@ colors = {0: [0, 0, 0],
           6: [250, 150, 10],
           7: [150, 10, 150],
           8: [10, 250, 10]}
-print(colors[1])
+print(predicted[1])
 picture = predicted[1]
 pictureprint = np.zeros((3,256,256))
 for i in range(256):
