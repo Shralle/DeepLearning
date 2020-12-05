@@ -44,7 +44,7 @@ net = Convolution(n_channels = 3,n_classes = 9)
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 3
+num_epoch = 1
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -54,8 +54,8 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        mask = data[:,3,:,:]
-        labels = data[:,4:13,:,:]
+        labels = data[:,3:12,:,:]
+        mask = data[:,12,:,:]
         inputs, labels = Variable(inputs), Variable(labels)
         optimizer.zero_grad()
         targets = labels
@@ -78,14 +78,18 @@ correct = 0
 total = 0
 
 for data in test_loader:
-    images = data[:,0:3,:,:]
-    labels = data[:,4:13,:,:]
+    inputs = data[:,0:3,:,:]
+    labels = data[:,3:12,:,:]
+    mask = data[:,12,:,:]
     labels = torch.argmax(labels, dim = 1)
-    outputs = net(Variable(images))
+    outputs = net(Variable(inputs))
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
-    correct += (predicted == labels).sum()
+    #correct += (predicted == labels).sum()
+    correct += torch.sum(predicted == labels)
+#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+
 colors = {0: [0, 0, 0],
           1: [10, 100, 10],
           2: [250, 250, 10],
@@ -97,25 +101,27 @@ colors = {0: [0, 0, 0],
           8: [10, 250, 10]}
 print(colors[1])
 picture = predicted[1]
-for i in range(0,8):
-    if(i == 0):
-        picture[i,:,:] = picture[colors[0],:,:]
-    if(i == 1):
-        picture[i,:,:] = picture[colors[1],:,:]
-    if(i == 2):
-        picture[i,:,:] = picture[colors[2],:,:]
-    if(i == 3):
-        picture[i,:,:] = picture[colors[3],:,:]
-    if(i == 4):
-        picture[i,:,:] = picture[colors[4],:,:]
-    if(i == 5):
-        picture[i,:,:] = picture[colors[5],:,:]
-    if(i == 6):
-        picture[i,:,:] = picture[colors[6],:,:]
-    if(i == 7):
-        picture[i,:,:] = picture[colors[7],:,:]
-    if(i == 8):
-        picture[i,:,:] = picture[colors[8],:,:]
-    if(i == 9):
-        picture[i,:,:] = picture[colors[9],:,:]
-plt.imshow(picture)
+pictureprint = np.zeros((3,256,256))
+for i in range(256):
+    for j in range(256):
+        if(picture[i,j] == 0):
+            pictureprint[:,i,j] = colors[0]
+        if(picture[i,j] == 1):
+            pictureprint[:,i,j] = colors[1]
+        if(picture[i,j] == 2):
+            pictureprint[:,i,j] = colors[2]
+        if(picture[i,j] == 3):
+            pictureprint[:,i,j] = colors[3]
+        if(picture[i,j] == 4):
+            pictureprint[:,i,j] = colors[4]
+        if(picture[i,j] == 5):
+            pictureprint[:,i,j] = colors[5]
+        if(picture[i,j] == 6):
+            pictureprint[:,i,j] = colors[6]
+        if(picture[i,j] == 7):
+            pictureprint[:,i,j] = colors[7]
+        if(picture[i,j] == 8):
+            pictureprint[:,i,j] = colors[8]
+        if(picture[i,j] == 9):
+            pictureprint[:,i,j] = colors[9]
+plt.imshow(picture) 
