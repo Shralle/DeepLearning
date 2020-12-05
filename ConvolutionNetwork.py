@@ -59,20 +59,6 @@ net = Convolution(n_channels = 3,n_classes = 9)
 use_cuda = torch.cuda.is_available()
 print("Running GPU.") if use_cuda else print("No GPU available.")
 
-
-def get_variable(x):
-    """ Converts tensors to cuda, if available. """
-    if use_cuda:
-        return x.cuda()
-    return x
-
-
-def get_numpy(x):
-    """ Get numpy array for both cuda and not. """
-    if use_cuda:
-        return x.cpu().data.numpy()
-    return x.data.numpy()
-
 if use_cuda:
     net.cuda()
 print(net)

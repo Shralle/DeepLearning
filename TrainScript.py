@@ -6,15 +6,15 @@ from UNetSimple import UNet
 import torch.optim as optim
 from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
-from ConvolutionNetwork import Convolution
+#from ConvolutionNetwork import Convolution
 from torch.utils.data import DataLoader, random_split
 import matplotlib.pyplot as plt
 
 #Set directory for data
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #data_dir_test = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/test'
 #mus dir:
-#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -38,7 +38,16 @@ batch_size = 30
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=True)
 
-net = Convolution(n_channels = 3,n_classes = 9)
+net = UNet(n_channels = 3,n_classes = 9)
+
+use_cuda = torch.cuda.is_available()
+print("Running GPU.") if use_cuda else print("No GPU available.")
+
+if use_cuda:
+    net.cuda()
+print(net)
+
+
 #Optimizer / loss function
 #criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
@@ -55,14 +64,14 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # Your code here!
         inputs = data[:,0:3,:,:]
         labels = data[:,3:12,:,:]
-        mask = data[:,12,:,:]
-        inputs, labels = Variable(inputs), Variable(labels)
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        inputs, labels = inputs.to(device), labels.to(device)
+
         optimizer.zero_grad()
-        targets = labels
-        targets = torch.argmax(targets, dim = 1)
+        labels = torch.argmax(labels, dim = 1)
         outputs = net(inputs)
-        #loss = criterion(outputs, targets)
-        loss = dice_loss(targets, outputs, ignore_background=True)
+        #loss = criterion(outputs, labels)
+        loss = dice_loss(labels, outputs, ignore_background=True)
         loss.backward()
         optimizer.step()
         # print statistics
@@ -81,6 +90,10 @@ for data in test_loader:
     inputs = data[:,0:3,:,:]
     labels = data[:,3:12,:,:]
     mask = data[:,12,:,:]
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    inputs, labels, mask = inputs.to(device), labels.to(device) , mask.to(device)
+
     labels = torch.argmax(labels, dim = 1)
     outputs = net(Variable(inputs))
     _, predicted = torch.max(outputs.data, 1)
@@ -90,40 +103,40 @@ for data in test_loader:
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 
-colors = {0: [0, 0, 0],
-          1: [10, 100, 10],
-          2: [250, 250, 10],
-          3: [10, 10, 250],
-          4: [10, 250, 250],
-          5: [250, 10, 250],
-          6: [250, 150, 10],
-          7: [150, 10, 150],
-          8: [10, 250, 10]}
-print(colors[1])
-picture = predicted[1]
-pictureprint = np.zeros((256,256,3))
-for i in range(256):
-    for j in range(256):
-        if(picture[i,j] == 0):
-            pictureprint[i,j,:] = colors[0]
-        if(picture[i,j] == 1):
-            pictureprint[i,j,:] = colors[1]
-        if(picture[i,j] == 2):
-            pictureprint[i,j,:] = colors[2]
-        if(picture[i,j] == 3):
-            pictureprint[i,j,:] = colors[3]
-        if(picture[i,j] == 4):
-            pictureprint[i,j,:] = colors[4]
-        if(picture[i,j] == 5):
-            pictureprint[i,j,:] = colors[5]
-        if(picture[i,j] == 6):
-            pictureprint[i,j,:] = colors[6]
-        if(picture[i,j] == 7):
-            pictureprint[i,j,:] = colors[7]
-        if(picture[i,j] == 8):
-            pictureprint[i,j,:] = colors[8]
-        if(picture[i,j] == 9):
-            pictureprint[i,j,:] = colors[9]
-plt.imshow(pictureprint)
-print("billedes label i farvekode: ", picture[1,1])
-print("bileldes label i farvekode efter loop: ", pictureprint[1,1,:]) 
+#colors = {0: [0, 0, 0],
+#          1: [10, 100, 10],
+#          2: [250, 250, 10],
+#          3: [10, 10, 250],
+#          4: [10, 250, 250],
+#          5: [250, 10, 250],
+#          6: [250, 150, 10],
+#          7: [150, 10, 150],
+#          8: [10, 250, 10]}
+#print(colors[1])
+#picture = predicted[1]
+#pictureprint = np.zeros((256,256,3))
+#for i in range(256):
+#    for j in range(256):
+#        if(picture[i,j] == 0):
+#            pictureprint[i,j,:] = colors[0]
+#        if(picture[i,j] == 1):
+#            pictureprint[i,j,:] = colors[1]
+#        if(picture[i,j] == 2):
+#            pictureprint[i,j,:] = colors[2]
+#        if(picture[i,j] == 3):
+#            pictureprint[i,j,:] = colors[3]
+#        if(picture[i,j] == 4):
+#            pictureprint[i,j,:] = colors[4]
+#        if(picture[i,j] == 5):
+#            pictureprint[i,j,:] = colors[5]
+#        if(picture[i,j] == 6):
+#            pictureprint[i,j,:] = colors[6]
+#        if(picture[i,j] == 7):
+#            pictureprint[i,j,:] = colors[7]
+#        if(picture[i,j] == 8):
+#            pictureprint[i,j,:] = colors[8]
+#        if(picture[i,j] == 9):
+#            pictureprint[i,j,:] = colors[9]
+#plt.imshow(pictureprint)
+#print("billedes label i farvekode: ", picture[1,1])
+#print("bileldes label i farvekode efter loop: ", pictureprint[1,1,:]) 
