@@ -10,9 +10,9 @@ from dice_loss import dice_loss
 import matplotlib.pyplot as plt
 
 #Set directory for data
-#data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
+data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
 #mus dir:
-data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
+#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #Initialize ARRAYS
 
 dataset_size = len(os.listdir(data_dir))
@@ -119,38 +119,54 @@ for data in test_loader:
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 
-#colors = {0: [0, 0, 0],
-#          1: [10, 100, 10],
-#          2: [250, 250, 10],
-#          3: [10, 10, 250],
-#          4: [10, 250, 250],
-#          5: [250, 10, 250],
-#          6: [250, 150, 10],
-#          7: [150, 10, 150],
-#          8: [10, 250, 10]}
-#print(colors[1])
-#picture = predicted[1]
-#pictureprint = np.zeros((3,256,256))
-#for i in range(256):
-#    for j in range(256):
-#        if(picture[i,j] == 0):
-#            pictureprint[:,i,j] = colors[0]
-#        if(picture[i,j] == 1):
-#            pictureprint[:,i,j] = colors[1]
-#        if(picture[i,j] == 2):
-#            pictureprint[:,i,j] = colors[2]
-#        if(picture[i,j] == 3):
-#            pictureprint[:,i,j] = colors[3]
-#        if(picture[i,j] == 4):
-#            pictureprint[:,i,j] = colors[4]
-#        if(picture[i,j] == 5):
-#            pictureprint[:,i,j] = colors[5]
-#        if(picture[i,j] == 6):
-#            pictureprint[:,i,j] = colors[6]
-#        if(picture[i,j] == 7):
-#            pictureprint[:,i,j] = colors[7]
-#        if(picture[i,j] == 8):
-#            pictureprint[:,i,j] = colors[8]
-#        if(picture[i,j] == 9):
-#            pictureprint[:,i,j] = colors[9]
-#plt.imshow(picture) 
+colors = {0: [int(0), int(0), int(0)],
+          1: [int(10), int(100), int(10)],
+          2: [int(250), int(250), int(10)],
+          3: [int(10), int(10), int(250)],
+          4: [int(10), int(250), int(250)],
+          5: [int(250), int(10), int(250)],
+          6: [int(250), int(150), int(10)],
+          7: [int(150), int(10), int(150)],
+          8: [int(10), int(250), int(10)]}
+print(colors[1])
+picture = predicted[1]
+pictureprint = np.zeros((256,256,3))
+
+#pictureprint[picture==0] = colors[0]
+#pictureprint[picture==1] = colors[1]
+#pictureprint[picture==2] = colors[2]
+#pictureprint[picture==3] = colors[3]
+#pictureprint[picture==4] = colors[4]
+#pictureprint[picture==5] = colors[5]
+#pictureprint[picture==6] = colors[6]
+#pictureprint[picture==7] = colors[7]
+#pictureprint[picture==8] = colors[8]
+#pictureprint[picture==9] = colors[9]
+#print(pictureprint[0,0])
+
+for i in range(256):
+    for j in range(256):
+        if(picture[i,j] == 0):
+            pictureprint[i,j,:] = (colors[0])
+        if(picture[i,j] == 1):
+            pictureprint[i,j,:] = (colors[1])
+        if(picture[i,j] == 2):
+            pictureprint[i,j,:] = (colors[2])
+        if(picture[i,j] == 3):
+            pictureprint[i,j,:] = (colors[3])
+        if(picture[i,j] == 4):
+            pictureprint[i,j,:] = (colors[4])
+        if(picture[i,j] == 5):
+            pictureprint[i,j,:] = (colors[5])
+        if(picture[i,j] == 6):
+            pictureprint[i,j,:] = (colors[6])
+        if(picture[i,j] == 7):
+            pictureprint[i,j,:] = (colors[7])
+        if(picture[i,j] == 8):
+            pictureprint[i,j,:] = (colors[8])
+        if(picture[i,j] == 9):
+            pictureprint[i,j,:] = (colors[9])
+plt.imshow(pictureprint)
+test = picture[15,15]
+print("billedes label i farvekode: ", test.item())
+print("bileldes label i farvekode efter loop: ", pictureprint[15,15,:]) 
