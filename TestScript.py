@@ -9,9 +9,6 @@ import os
 from torch.utils.data import DataLoader, random_split
 
 #Set directory for data
-data_dir = '/Users/frederikkjaer/Documents/DTU/DeepLearning/Projekt/DeepLearning/carseg_data/save'
-#mus dir:
-#data_dir = "/Users/Rnd/Documents/DeepLearning/DeepLearning/carseg_data/save"
 #HPC
 data_dir = "./carseg_data/save"
 
@@ -36,7 +33,7 @@ batch_size = 6
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
-PATH = './model/model.pt'
+PATH = './model/model_40epoch5batch.pt'
 net = Convolution(n_channels = 3,n_classes = 9)
 net = torch.load(PATH)
 #model.eval()
