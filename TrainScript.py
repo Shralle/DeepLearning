@@ -8,12 +8,12 @@ from SoftDiceloss import SoftDiceloss
 from dice_loss import dice_loss
 #from ConvolutionNetwork import Convolution
 from torch.utils.data import DataLoader, random_split
-import matplotlib.pyplot as plt
-from PIL import Image
+#import matplotlib.pyplot as plt
+#from PIL import Image
 
 
 #Set directory for data
-data_dir = "./carseg_data/save"
+data_dir = "./carseg_data/savebig"
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -31,7 +31,7 @@ data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
 train, test = random_split(data, [n_train, n_test])
-batch_size = 6
+batch_size = 5
 
 #Splits the data intop batches
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=False)
@@ -68,7 +68,7 @@ print(net)
 optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 1
+num_epoch = 40
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
