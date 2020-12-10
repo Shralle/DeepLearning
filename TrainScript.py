@@ -98,6 +98,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
-PATH = './model/model.pt'
+PATH = './model/ConvModel.pt'
 
 torch.save(net, PATH)
