@@ -34,7 +34,7 @@ test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle
 
 
 PATH = './model/model_40epoch5batch.pt'
-net = Convolution(n_channels = 3,n_classes = 9)
+net = UNet(n_channels = 3,n_classes = 9)
 net = torch.load(PATH)
 #model.eval()
 
