@@ -138,5 +138,6 @@ for i in range(256):
 #img.show()
 #img = Image.fromarray(pictureprint, 'RGB')
 #img.show()
-plt.imshow(pictureprint, interpolation='nearest')
+PictureForPrint = plt.imread(pictureprint)
+plt.imshow(pictureprint)
 plt.show()

@@ -26,10 +26,11 @@ for filename in os.listdir(data_dir):
 
     i = i + 1       
 
+torch.manual_seed(0)
 data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
-train, test = random_split(data, [n_train, n_test])
+train, test = random_split(data, [n_train, n_test], generator = torch.manual_seed(0))
 batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
