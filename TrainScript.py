@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader, random_split
 
 
 #Set directory for data
-data_dir = "./carseg_data/save"
+data_dir = "./carseg_data/savebig"
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -26,11 +26,12 @@ for filename in os.listdir(data_dir):
         DataAll[i] = DataTemp
 
     i = i + 1       
-
+torch.manual_seed(0)
 data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
-train, test = random_split(data, [n_train, n_test])
+train, test = random_split(data, [n_train, n_test], generator = torch.manual_seed(0))
+
 batch_size = 5
 
 #Splits the data intop batches
@@ -40,21 +41,9 @@ test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle
 in_channels = 3
 mid_channels = 256
 #Initialize Network
-class Convolution(nn.Module):
-    def __init__(self, n_channels, n_classes, bilinear=True):
-        super(Convolution, self).__init__()
-        self.double_conv = nn.Sequential(
-                    nn.Conv2d(n_channels, mid_channels, kernel_size=3, padding=1),
-                    nn.BatchNorm2d(mid_channels),
-                    nn.ReLU(inplace=True),
-                    nn.Conv2d(mid_channels, n_classes, kernel_size=3, padding=1),
-                    nn.BatchNorm2d(n_classes),
-                    nn.ReLU(inplace=True)
-                )
-    def forward(self, x):
-        return self.double_conv(x)
+
 #Create Network
-net = Convolution(n_channels = 3,n_classes = 9)
+net = UNet(n_channels = 3,n_classes = 9)
 
 use_cuda = torch.cuda.is_available()
 print("Running GPU.") if use_cuda else print("No GPU available.")
@@ -98,6 +87,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
-PATH = './model/ConvModel.pt'
+PATH = './model/model_40epoch5batchV2.pt'
 
 torch.save(net, PATH)

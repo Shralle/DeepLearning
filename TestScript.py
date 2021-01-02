@@ -26,10 +26,11 @@ for filename in os.listdir(data_dir):
 
     i = i + 1       
 
+torch.manual_seed(0)
 data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
-train, test = random_split(data, [n_train, n_test])
+train, test = random_split(data, [n_train, n_test], generator = torch.manual_seed(0))
 batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
@@ -70,28 +71,28 @@ colors = {0: [int(0), int(0), int(0)],
           8: [int(10), int(250), int(10)]}
 print(predicted.shape)
 picture = predicted
-pictureprint = np.zeros((256,256,3))
+pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
     for j in range(256):
-        if(picture[i,j] == 0):
+        if(picture[0,i,j] == 0):
             pictureprint[i,j,:] = (colors[0])
-        if(picture[i,j] == 1):
+        if(picture[0,i,j] == 1):
             pictureprint[i,j,:] = (colors[1])
-        if(picture[i,j] == 2):
+        if(picture[0,i,j] == 2):
             pictureprint[i,j,:] = (colors[2])
-        if(picture[i,j] == 3):
+        if(picture[0,i,j] == 3):
             pictureprint[i,j,:] = (colors[3])
-        if(picture[i,j] == 4):
+        if(picture[0,i,j] == 4):
             pictureprint[i,j,:] = (colors[4])
-        if(picture[i,j] == 5):
+        if(picture[0,i,j] == 5):
             pictureprint[i,j,:] = (colors[5])
-        if(picture[i,j] == 6):
+        if(picture[0,i,j] == 6):
             pictureprint[i,j,:] = (colors[6])
-        if(picture[i,j] == 7):
+        if(picture[0,i,j] == 7):
             pictureprint[i,j,:] = (colors[7])
-        if(picture[i,j] == 8):
+        if(picture[0,i,j] == 8):
             pictureprint[i,j,:] = (colors[8])
-        if(picture[i,j] == 9):
+        if(picture[0,i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
 plt.imshow(pictureprint, interpolation='nearest')
 plt.show()
