@@ -70,7 +70,6 @@ colors = {0: [int(0), int(0), int(0)],
 print(colors[1])
 picture = predicted[2]
 pictureprint = np.zeros((256,256,3))
-
 for i in range(256):
     for j in range(256):
         if(picture[i,j] == 0):
@@ -95,3 +94,5 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[9])
 img = Image.fromarray(pictureprint, 'RGB')
 img.show()
+
+    
