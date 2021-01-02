@@ -1,6 +1,6 @@
 import torch.nn as nn
-from PIL import Image
-from ConvolutionNetwork import Convolution
+#from PIL import Image
+#from ConvolutionNetwork import Convolution
 from UNetSimple import UNet
 from torch.autograd import Variable
 import numpy as np
@@ -95,5 +95,3 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[9])
 plt.imshow(pictureprint, interpolation='nearest')
 plt.show()
-
-    
