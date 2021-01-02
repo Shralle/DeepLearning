@@ -29,7 +29,7 @@ data = torch.from_numpy(DataAll).float()
 n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
 train, test = random_split(data, [n_train, n_test])
-batch_size = 6
+batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
@@ -45,11 +45,11 @@ for data in test_loader:
     inputs = data[:,0:3,:,:]
     labels = data[:,3:12,:,:]
     mask = data[:,12,:,:]
-
+    ###
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     inputs, labels, mask = inputs.to(device), labels.to(device) , mask.to(device)
-
     labels = torch.argmax(labels, dim = 1)
+    ###
     outputs = net(Variable(inputs))
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
@@ -67,31 +67,48 @@ colors = {0: [int(0), int(0), int(0)],
           6: [int(250), int(150), int(10)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
-print(colors[1])
-picture = predicted[2]
+print(predicted.shape)
+picture = predicted
 pictureprint = np.zeros((256,256,3))
 
 for i in range(256):
     for j in range(256):
-        if(picture[i,j] == 0):
-            pictureprint[i,j,:] = (colors[0])
-        if(picture[i,j] == 1):
-            pictureprint[i,j,:] = (colors[1])
-        if(picture[i,j] == 2):
-            pictureprint[i,j,:] = (colors[2])
-        if(picture[i,j] == 3):
-            pictureprint[i,j,:] = (colors[3])
-        if(picture[i,j] == 4):
-            pictureprint[i,j,:] = (colors[4])
-        if(picture[i,j] == 5):
-            pictureprint[i,j,:] = (colors[5])
-        if(picture[i,j] == 6):
-            pictureprint[i,j,:] = (colors[6])
-        if(picture[i,j] == 7):
-            pictureprint[i,j,:] = (colors[7])
-        if(picture[i,j] == 8):
-            pictureprint[i,j,:] = (colors[8])
-        if(picture[i,j] == 9):
-            pictureprint[i,j,:] = (colors[9])
+        if(picture[0,i,j] == 0):
+            pictureprint[i,j,0] =0
+            pictureprint[i,j,1] =0
+            pictureprint[i,j,2] =0
+        if(picture[0,i,j] == 1):
+            pictureprint[i,j,0] =10
+            pictureprint[i,j,1] =100
+            pictureprint[i,j,2] =10
+        if(picture[0,i,j] == 2):
+            pictureprint[i,j,0] =250
+            pictureprint[i,j,1] =250
+            pictureprint[i,j,2] =10
+        if(picture[0,i,j] == 3):
+            pictureprint[i,j,0] =10
+            pictureprint[i,j,1] =10
+            pictureprint[i,j,2] =250
+        if(picture[0,i,j] == 4):
+            pictureprint[i,j,0] =10
+            pictureprint[i,j,1] =250
+            pictureprint[i,j,2] =250
+        if(picture[0,i,j] == 5):
+            pictureprint[i,j,0] =250
+            pictureprint[i,j,1] =10
+            pictureprint[i,j,2] =250
+        if(picture[0,i,j] == 6):
+            pictureprint[i,j,0] =250
+            pictureprint[i,j,1] =150
+            pictureprint[i,j,2] =10
+        if(picture[0,i,j] == 7):
+            pictureprint[i,j,0] =150 
+            pictureprint[i,j,1] =10
+            pictureprint[i,j,2] =150
+        if(picture[0,i,j] == 8):
+            pictureprint[i,j,0] =10
+            pictureprint[i,j,1] =250
+            pictureprint[i,j,2] =10
+
 img = Image.fromarray(pictureprint, 'RGB')
 img.show()
