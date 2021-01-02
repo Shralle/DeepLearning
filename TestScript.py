@@ -73,25 +73,25 @@ picture = predicted
 pictureprint = np.zeros((256,256,3))
 for i in range(256):
     for j in range(256):
-        if(picture[i,j] == 0):
+        if(picture[0,i,j] == 0):
             pictureprint[i,j,:] = (colors[0])
-        if(picture[i,j] == 1):
+        if(picture[0,i,j] == 1):
             pictureprint[i,j,:] = (colors[1])
-        if(picture[i,j] == 2):
+        if(picture[0,i,j] == 2):
             pictureprint[i,j,:] = (colors[2])
-        if(picture[i,j] == 3):
+        if(picture[0,i,j] == 3):
             pictureprint[i,j,:] = (colors[3])
-        if(picture[i,j] == 4):
+        if(picture[0,i,j] == 4):
             pictureprint[i,j,:] = (colors[4])
-        if(picture[i,j] == 5):
+        if(picture[0,i,j] == 5):
             pictureprint[i,j,:] = (colors[5])
-        if(picture[i,j] == 6):
+        if(picture[0,i,j] == 6):
             pictureprint[i,j,:] = (colors[6])
-        if(picture[i,j] == 7):
+        if(picture[0,i,j] == 7):
             pictureprint[i,j,:] = (colors[7])
-        if(picture[i,j] == 8):
+        if(picture[0,i,j] == 8):
             pictureprint[i,j,:] = (colors[8])
-        if(picture[i,j] == 9):
+        if(picture[0,i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
 plt.imshow(pictureprint, interpolation='nearest')
 plt.show()
