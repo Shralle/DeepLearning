@@ -16,9 +16,5 @@ img = Image.fromarray(PicturePrint, 'RGB')
 img.show()
  
 
-import numpy as np
-from PIL import Image
-data_dir = "./carseg_data"
-
  
 
