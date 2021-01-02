@@ -70,7 +70,7 @@ colors = {0: [int(0), int(0), int(0)],
           8: [int(10), int(250), int(10)]}
 print(predicted.shape)
 picture = predicted
-pictureprint = np.zeros((256,256,3))
+pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
     for j in range(256):
         if(picture[0,i,j] == 0):
@@ -95,5 +95,3 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[9])
 plt.imshow(pictureprint, interpolation='nearest')
 plt.show()
-
-    
