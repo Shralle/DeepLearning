@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader, random_split
 
 
 #Set directory for data
-data_dir = "./carseg_data/savebig"
+data_dir = "./carseg_data/save"
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -87,6 +87,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
-PATH = './model/unet_2epoch5batch01lossV2.pt'
+PATH = './model/test.pt'
 
 torch.save(net, PATH)
