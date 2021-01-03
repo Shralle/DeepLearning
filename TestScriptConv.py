@@ -47,6 +47,7 @@ if use_cuda:
 net = torch.load(PATH)
 
 #model.eval()
+nobackground = 0
 
 correct = 0
 total = 0
@@ -66,14 +67,15 @@ for data in test_loader:
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
     #correct += (predicted == labels).sum()
+    nobackground += torch.sum(labels == 0)
     correct += torch.sum(predicted == labels)
     predictedlist[count, :, :] = predicted
     labellist[count, :, :] = labels
     count = count + 1
 
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
-
-print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+print(nobackground.item())
+print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256-nobackground.item()))))
 
 colors = {0: [int(0), int(0), int(0)],
           1: [int(10), int(100), int(10)],
@@ -85,8 +87,8 @@ colors = {0: [int(0), int(0), int(0)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
 print(predictedlist.shape)
-picture = predictedlist[0,:,:]
-#picture = labellist[0,:,:]
+picture = predictedlist[1,:,:]
+#picture = labellist[1,:,:]
 pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
     for j in range(256):
