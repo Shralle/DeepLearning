@@ -54,10 +54,10 @@ print(net)
 
 #Optimizer / loss function
 #criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=1e-4)
+optimizer = optim.Adam(net.parameters(), lr=0.1, weight_decay=1e-4)
 #Training
 from torch.autograd import Variable
-num_epoch = 40
+num_epoch = 2
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -76,7 +76,7 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         labels = torch.argmax(labels, dim = 1)
         outputs = net(inputs)
         #loss = criterion(outputs, targets)
-        loss = dice_loss(labels, outputs, ignore_background=True)
+        loss = dice_loss(labels, outputs, ignore_background=False)
         loss.backward()
         optimizer.step()
         # print statistics
@@ -87,6 +87,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
-PATH = './model/model_40epoch5batchV3.pt'
+PATH = './model/unet_2epoch5batch01lossV2.pt'
 
 torch.save(net, PATH)
