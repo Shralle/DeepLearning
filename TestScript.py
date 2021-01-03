@@ -35,7 +35,7 @@ batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
-PATH = './model/model_40epoch5batchV3.pt'
+PATH = './model/test.pt'
 net = UNet(n_channels = 3,n_classes = 9)
 
 use_cuda = torch.cuda.is_available()
@@ -116,5 +116,5 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[8])
         if(picture[i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
-plt.imshow(pictureprint, interpolation='nearest')
-plt.show()
+#plt.imshow(pictureprint, interpolation='nearest')
+#plt.show()
