@@ -37,12 +37,22 @@ test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle
 
 PATH = './model/model_40epoch5batch.pt'
 net = UNet(n_channels = 3,n_classes = 9)
+
+use_cuda = torch.cuda.is_available()
+print("Running GPU.") if use_cuda else print("No GPU available.")
+if use_cuda:
+    net.cuda()
+#print(net)
+
 net = torch.load(PATH)
+
 #model.eval()
 
 correct = 0
 total = 0
-
+predictedlist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
+labellist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
+count = 0
 for data in test_loader:
     inputs = data[:,0:3,:,:]
     labels = data[:,3:12,:,:]
@@ -57,7 +67,12 @@ for data in test_loader:
     total += labels.size(0)
     #correct += (predicted == labels).sum()
     correct += torch.sum(predicted == labels)
+    predictedlist[count, :, :] = predicted
+    labellist[count, :, :] = labels
+    count = count + 1
+
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 
 colors = {0: [int(0), int(0), int(0)],
@@ -69,30 +84,31 @@ colors = {0: [int(0), int(0), int(0)],
           6: [int(250), int(150), int(10)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
-print(predicted.shape)
-picture = predicted
+print(predictedlist.shape)
+#picture = predictedlist[0,:,:]
+picture = labellist[0,:,:]
 pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
     for j in range(256):
-        if(picture[0,i,j] == 0):
+        if(picture[i,j] == 0):
             pictureprint[i,j,:] = (colors[0])
-        if(picture[0,i,j] == 1):
+        if(picture[i,j] == 1):
             pictureprint[i,j,:] = (colors[1])
-        if(picture[0,i,j] == 2):
+        if(picture[i,j] == 2):
             pictureprint[i,j,:] = (colors[2])
-        if(picture[0,i,j] == 3):
+        if(picture[i,j] == 3):
             pictureprint[i,j,:] = (colors[3])
-        if(picture[0,i,j] == 4):
+        if(picture[i,j] == 4):
             pictureprint[i,j,:] = (colors[4])
-        if(picture[0,i,j] == 5):
+        if(picture[i,j] == 5):
             pictureprint[i,j,:] = (colors[5])
-        if(picture[0,i,j] == 6):
+        if(picture[i,j] == 6):
             pictureprint[i,j,:] = (colors[6])
-        if(picture[0,i,j] == 7):
+        if(picture[i,j] == 7):
             pictureprint[i,j,:] = (colors[7])
-        if(picture[0,i,j] == 8):
+        if(picture[i,j] == 8):
             pictureprint[i,j,:] = (colors[8])
-        if(picture[0,i,j] == 9):
+        if(picture[i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
 plt.imshow(pictureprint, interpolation='nearest')
 plt.show()
