@@ -52,6 +52,7 @@ correct = 0
 total = 0
 predictedlist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
 labellist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
+masklist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
 count = 0
 nobackground = 0
 
@@ -72,6 +73,7 @@ for data in test_loader:
     correct += torch.sum(predicted == labels)
     predictedlist[count, :, :] = predicted
     labellist[count, :, :] = labels
+    masklist[count, :, :] = mask
     count = count + 1
 
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
@@ -90,6 +92,7 @@ colors = {0: [int(0), int(0), int(0)],
 print(predictedlist.shape)
 #picture = predictedlist[1,:,:]
 picture = labellist[1,:,:]
+#picture = masklist[1,:,:]
 pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
     for j in range(256):

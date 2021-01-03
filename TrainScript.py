@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader, random_split
 
 
 #Set directory for data
-data_dir = "./carseg_data/savebig"
+data_dir = "./carseg_data/save"
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -67,16 +67,16 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         # zero the parameter gradients
         # Your code here!
         inputs = data[:,0:3,:,:]
-        labels = data[:,3:12,:,:]
-        #mask = data[:,12,:,:]
+        #labels = data[:,3:12,:,:]
+        mask = data[:,12,:,:]
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        inputs, labels = inputs.to(device), labels.to(device)
+        inputs, mask = inputs.to(device), labels.to(device)
 
         optimizer.zero_grad()
-        labels = torch.argmax(labels, dim = 1)
+        #labels = torch.argmax(labels, dim = 1)
         outputs = net(inputs)
         #loss = criterion(outputs, targets)
-        loss = dice_loss(labels, outputs, ignore_background=False)
+        loss = dice_loss(mask, outputs, ignore_background=True)
         loss.backward()
         optimizer.step()
         # print statistics
