@@ -35,7 +35,7 @@ batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
-PATH = './model/model_40epoch5batchV3.pt'
+PATH = './model/model_40epoch5batch.pt'
 net = UNet(n_channels = 3,n_classes = 9)
 
 use_cuda = torch.cuda.is_available()
@@ -70,7 +70,9 @@ for data in test_loader:
     predictedlist[count, :, :] = predicted
     labellist[count, :, :] = labels
     count = count + 1
+
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+
 print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 
 colors = {0: [int(0), int(0), int(0)],
