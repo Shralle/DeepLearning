@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 #Set directory for data
 #HPC
-data_dir = "./carseg_data/save"
+data_dir = "./carseg_data/savebig"
 
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
@@ -35,7 +35,7 @@ batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
-PATH = './model/test.pt'
+PATH = './model/test3.pt'
 net = UNet(n_channels = 3,n_classes = 9)
 
 use_cuda = torch.cuda.is_available()
@@ -76,9 +76,8 @@ for data in test_loader:
     masklist[count, :, :] = mask
     count = count + 1
 
-#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
-print(nobackground.item())
-print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256-nobackground.item()))))
+print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256-nobackground.item()))))
 
 colors = {0: [int(0), int(0), int(0)],
           1: [int(10), int(100), int(10)],
@@ -90,8 +89,8 @@ colors = {0: [int(0), int(0), int(0)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
 print(predictedlist.shape)
-#picture = predictedlist[1,:,:]
-picture = labellist[1,:,:]
+picture = predictedlist[1,:,:]
+#picture = labellist[1,:,:]
 #picture = masklist[1,:,:]
 pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):

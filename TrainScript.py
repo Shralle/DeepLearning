@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader, random_split
 
 
 #Set directory for data
-data_dir = "./carseg_data/save"
+data_dir = "./carseg_data/savebig"
 #Initialize ARRAYSdataset_size = len(os.listdir(data_dir))
 dataset_size = len(os.listdir(data_dir))
 DataAll= np.ndarray(shape=(dataset_size,13,256,256), dtype = float)
@@ -32,7 +32,7 @@ n_test = int(len(data) * 0.1)
 n_train = len(data) - n_test
 train, test = random_split(data, [n_train, n_test], generator = torch.manual_seed(0))
 
-batch_size = 5
+batch_size = 10
 
 #Splits the data intop batches
 train_loader = torch.utils.data.DataLoader(train, batch_size = batch_size, shuffle=False)
@@ -56,8 +56,10 @@ print(net)
 #criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.1, weight_decay=1e-4)
 #Training
+net.train()
+
 from torch.autograd import Variable
-num_epoch = 2
+num_epoch = 5
 for epoch in range(num_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     net.train()
@@ -70,13 +72,13 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         labels = data[:,3:12,:,:]
         mask = data[:,12,:,:]
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        inputs, mask = inputs.to(device), labels.to(device)
+        inputs, labels = inputs.to(device), labels.to(device)
 
         optimizer.zero_grad()
         labels = torch.argmax(labels, dim = 1)
         outputs = net(inputs)
         #loss = criterion(outputs, targets)
-        loss = dice_loss(labels, outputs, ignore_background=True)
+        loss = dice_loss(labels, outputs, ignore_background=True)*87.5 + dice_loss(labels, outputs, ignore_background=False)*12.5
         loss.backward()
         optimizer.step()
         # print statistics
@@ -87,6 +89,6 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
             running_loss = 0.0
 print('Finished Training')
 
-PATH = './model/test.pt'
+PATH = './model/test3.pt'
 
 torch.save(net, PATH)
