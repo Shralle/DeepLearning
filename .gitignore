@@ -129,4 +129,3 @@ dmypy.json
 .pyre/
 
 carseg_data/savebig/*
-model/*
