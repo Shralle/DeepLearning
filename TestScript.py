@@ -90,8 +90,8 @@ colors = {0: [int(0), int(0), int(0)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
 print(predictedlist.shape)
-#picture = predictedlist[1,:,:]
-picture = labellist[1,:,:]
+picture = predictedlist[1,:,:]
+#picture = labellist[1,:,:]
 #picture = masklist[1,:,:]
 pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
