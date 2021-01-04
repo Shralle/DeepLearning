@@ -35,7 +35,7 @@ batch_size = 1
 test_loader = torch.utils.data.DataLoader(test, batch_size = batch_size, shuffle=False)
 
 
-PATH = './model/test3.pt'
+PATH = './model/model_40epoch5batchV3.pt'
 net = UNet(n_channels = 3,n_classes = 9)
 
 use_cuda = torch.cuda.is_available()
@@ -55,6 +55,9 @@ labellist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
 masklist = torch.zeros([len(test_loader), 256, 256], dtype=torch.float64)
 count = 0
 nobackground = 0
+bestcasedim = 0
+bestcase = 10000000000
+bestcaseback = 0
 
 for data in test_loader:
     inputs = data[:,0:3,:,:]
@@ -69,15 +72,20 @@ for data in test_loader:
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
     #correct += (predicted == labels).sum()
-    nobackground += torch.sum(labels == 0)
-    correct += torch.sum(predicted == labels)
+    correct = torch.sum(predicted == labels)
+    nobackground = torch.sum(labels == 0)
+    if correct < bestcase:
+        bestcasedim = count
+        bestcase = correct
+        bestcaseback = nobackground
     predictedlist[count, :, :] = predicted
     labellist[count, :, :] = labels
     masklist[count, :, :] = mask
     count = count + 1
 
-print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
+#print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256))))
 #print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * correct.true_divide(total*256*256-nobackground.item()))))
+print('Accuracy of the network on the {} test images: {:4.2f} %'.format(n_test, (100 * bestcase.true_divide(256*256-bestcaseback.item()))))
 
 colors = {0: [int(0), int(0), int(0)],
           1: [int(10), int(100), int(10)],
@@ -88,9 +96,9 @@ colors = {0: [int(0), int(0), int(0)],
           6: [int(250), int(150), int(10)],
           7: [int(150), int(10), int(150)],
           8: [int(10), int(250), int(10)]}
-print(predictedlist.shape)
-picture = predictedlist[1,:,:]
-#picture = labellist[1,:,:]
+print(bestcasedim)
+picture = predictedlist[bestcasedim,:,:]
+#picture = labellist[bestcasedim,:,:]
 #picture = masklist[1,:,:]
 pictureprint = np.zeros((256,256,3),dtype=int)
 for i in range(256):
@@ -115,5 +123,5 @@ for i in range(256):
             pictureprint[i,j,:] = (colors[8])
         if(picture[i,j] == 9):
             pictureprint[i,j,:] = (colors[9])
-#plt.imshow(pictureprint, interpolation='nearest')
-#plt.show()
+plt.imshow(pictureprint, interpolation='nearest')
+plt.show()
