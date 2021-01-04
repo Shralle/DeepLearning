@@ -85,7 +85,7 @@ for epoch in range(num_epoch):  # loop over the dataset multiple times
         running_loss += loss.item()
         if i % 2 == 1:    # print every 10 mini-batches
             print('[%d, %5d] loss: %.3f' %
-            (epoch + 1, i + 1, running_loss / 10))
+            (epoch + 1, i + 1, running_loss / 2))
             running_loss = 0.0
 print('Finished Training')
 
