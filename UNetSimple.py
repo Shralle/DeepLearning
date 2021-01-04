@@ -76,4 +76,4 @@ class UNet(nn.Module):
         skip1 = torch.cat((layer1, layer9up2), dim = 1)
         layer9up1 = relu(self.conv99(skip1))
         layer9up1 = relu(self.conv9(layer9up1))
-        return self.conv10(layer9up1)
+        return sigmoid(self.conv10(layer9up1))
